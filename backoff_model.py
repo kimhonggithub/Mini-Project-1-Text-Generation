@@ -26,23 +26,15 @@ def build_language_model(tokens):
     unigram_counts = Counter(unigrams)
 
     def calculate_probability(wi_minus_1, wi):
-        lambda1 = 1/2  # Update lambdas for LM1
-        lambda2 = 1/2
-
         # Calculate probabilities for 3-gram, 2-gram, and 1-gram without smoothing
         prob_3gram = trigram_counts[(wi_minus_1, wi)] / bigram_counts[wi_minus_1] if bigram_counts[wi_minus_1] > 0 else 0
         prob_2gram = bigram_counts[wi] / unigram_counts[wi_minus_1] if unigram_counts[wi_minus_1] > 0 else 0
         prob_1gram = unigram_counts[wi] / len(tokens)
 
-        # Backoff: Use lower-order n-gram probabilities when higher-order n-grams are not available
-        if prob_3gram == 0:
-            prob_3gram = prob_2gram if prob_2gram != 0 else prob_1gram
-        if prob_2gram == 0:
-            prob_2gram = prob_1gram
+        # Backoff without modifying probabilities
+        return prob_3gram if prob_3gram > 0 else prob_2gram if prob_2gram > 0 else prob_1gram
 
-        return lambda1 * prob_3gram + lambda2 * prob_2gram
-
-    # Return a dictionary-like object representing the language model
+    # Return the function for calculating probabilities
     return calculate_probability
 
 # Step 7: Create a text generator using the model
