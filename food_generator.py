@@ -5,7 +5,7 @@ from interpolation_model import build_interpolation_language_model, lamdas_and_k
 from data_pro import read_corpus,split_corpus_to_token
 
 # Streamlit UI
-st.title('Language Model Selection')
+st.title('Language Text Generator Model :')
 
 # Input text area for user to input seed text
 seed_text = st.text_area('Enter Seed Text:', '')
@@ -33,8 +33,8 @@ if st.button('Generate Text'):
         # Build LM2 language model (interpolation method)
         # Placeholder for hyperparameter experimentation
       
-        lamda_value, k_value = lamdas_and_k(train_tokens,val_tokens,5000)
-        model = build_interpolation_language_model(train_tokens, k_value, val_tokens)
+        k_value ,lamda_value = lamdas_and_k(val_tokens,vocab_size)
+        model = build_interpolation_language_model(train_tokens, k_value, vocab_size,lamda_value)
 
         # Generate text based on input
         
